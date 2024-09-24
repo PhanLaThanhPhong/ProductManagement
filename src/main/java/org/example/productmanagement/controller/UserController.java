@@ -2,6 +2,8 @@ package org.example.productmanagement.controller;
 
 import org.example.productmanagement.domain.User;
 import org.example.productmanagement.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,31 +17,35 @@ public class UserController {
     }
 
     // Create User
-    @PostMapping("/user")
-    public User createUser(@RequestBody User newUser){
-        return this.userService.handleCreateUser(newUser);
+    @PostMapping("/users")
+    public ResponseEntity<User> createUser(@RequestBody User newUser){
+        User user = this.userService.handleCreateUser(newUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     // Read User
-    @GetMapping("/user/{id}")
-    public User getUser(@PathVariable long id){
-        return this.userService.handleFetchUserById(id);
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUser(@PathVariable long id){
+        User user = this.userService.handleFetchUserById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
-    @GetMapping("/user")
-    public List<User> getAllUsers(){
-        return this.userService.handlefetchAllUser();
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers(){
+        List<User> users = this.userService.handlefetchAllUser();
+        return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
     // Update User
-    @PutMapping("/user")
-    public User updateUser( @RequestBody User updatedUser){
-        return this.userService.handleUpdateUser(updatedUser);
+    @PutMapping("/users")
+    public ResponseEntity<User> updateUser( @RequestBody User updatedUser){
+        User user = this.userService.handleUpdateUser(updatedUser);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     // Delete User
-    @DeleteMapping("/user/{id}")
-    public String deleteUser(@PathVariable("id") long id){
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id){
         this.userService.handleDeleteUser(id);
-        return "User Id: " + id + " deleted";
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
