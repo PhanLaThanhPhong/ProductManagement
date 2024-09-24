@@ -2,8 +2,9 @@ package org.example.productmanagement.controller;
 
 import org.example.productmanagement.domain.User;
 import org.example.productmanagement.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -13,14 +14,32 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("user/create")
-    public String createUser(){
-        User user = new User();
-        user.setName("Phong");
-        user.setEmail("phong@gmail.com");
-        user.setPassword("123456");
-        this.userService.handleCreateUser(user);
+    // Create User
+    @PostMapping("/user")
+    public User createUser(@RequestBody User newUser){
+        return this.userService.handleCreateUser(newUser);
+    }
 
-        return "User created";
+    // Read User
+    @GetMapping("/user/{id}")
+    public User getUser(@PathVariable long id){
+        return this.userService.handleFetchUserById(id);
+    }
+    @GetMapping("/user")
+    public List<User> getAllUsers(){
+        return this.userService.handlefetchAllUser();
+    }
+
+    // Update User
+    @PutMapping("/user")
+    public User updateUser( @RequestBody User updatedUser){
+        return this.userService.handleUpdateUser(updatedUser);
+    }
+
+    // Delete User
+    @DeleteMapping("/user/{id}")
+    public String deleteUser(@PathVariable("id") long id){
+        this.userService.handleDeleteUser(id);
+        return "User Id: " + id + " deleted";
     }
 }
